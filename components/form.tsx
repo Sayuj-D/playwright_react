@@ -2,6 +2,21 @@
 
 import React, { useState } from "react";
 
+type FormData = {
+  name: string;
+  email: string;
+  country: string;
+  gender: string;
+  termsAccepted: boolean;
+};
+
+type Errors = {
+  name?: string;
+  email?: string;
+  gender?: string;
+  terms?: string;
+};
+
 const Form = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -9,11 +24,11 @@ const Form = () => {
   const [gender, setGender] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
 
-  const [errors, setErrors] = useState({});
-  const [storedData, setStoredData] = useState("");
+  const [errors, setErrors] = useState<Errors>({});
+  const [storedData, setStoredData] = useState<FormData[]>([]); // ✅ fixed
 
   const validate = () => {
-    const newErrors: any = {};
+    const newErrors: Errors = {};
 
     if (!name) newErrors.name = "Name is required.";
     if (!email) {
@@ -36,7 +51,7 @@ const Form = () => {
       return;
     }
 
-    const formData = {
+    const formData: FormData = {
       name,
       email,
       country,
@@ -46,7 +61,7 @@ const Form = () => {
 
     try {
       const existing = localStorage.getItem("formData");
-      const parsed = existing ? JSON.parse(existing) : [];
+      const parsed: FormData[] = existing ? JSON.parse(existing) : [];
       parsed.push(formData);
       localStorage.setItem("formData", JSON.stringify(parsed));
       alert("Submitted successfully!");
